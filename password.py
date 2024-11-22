@@ -1,25 +1,44 @@
 import random
 import string
 
-def pass_gen(length = 12):
-    if length < 4:
-        return "Please input more than 4 characters!!!"
-    
-    
-    lower = string.ascii_lowercase
-    upper = string.ascii_uppercase
-    digits = string.digits
-    special = string.punctuation
+def generate_password(pass_length=12):
+    # Ensure the password length is reasonable
+    if pass_length < 4:
+        return "Password length should be at least 4 characters!"
 
-    password = [random.choice(lower), random.choice(upper), random.choice(digits), random.choice(special)]
+    # Define character sets for password generation
+    lowercase_letters = string.ascii_lowercase
+    uppercase_letters = string.ascii_uppercase
+    numbers = string.digits
+    symbols = string.punctuation
 
-    all_char = lower + upper + digits + special
-    password += random.choices(all_char, k=length-4)
+    # Guarantee inclusion of at least one character from each set
+    mandatory_chars = [
+        random.choice(lowercase_letters),
+        random.choice(uppercase_letters),
+        random.choice(numbers),
+        random.choice(symbols),
+    ]
 
-    random.shuffle(password)
+    # Combine all character sets
+    all_characters = lowercase_letters + uppercase_letters + numbers + symbols
 
-    return ''.join(password)
+    # Fill the remaining length with random characters
+    remaining_chars = random.choices(all_characters, k=pass_length - 4)
 
-password_length = int(input("Enter the desired length of the password: "))
-password = pass_gen(password_length)
-print("Generated Password: ", password)
+    # Combine mandatory and random characters
+    password_chars = mandatory_chars + remaining_chars
+
+    # Shuffle to ensure randomness
+    random.shuffle(password_chars)
+
+    # Return the password as a string
+    return ''.join(password_chars)
+
+# Input desired password length and generate the password
+try:
+    length = int(input("Enter the desired length of the password: "))
+    generated_password = generate_password(length)
+    print("Your Secure Password: ", generated_password)
+except ValueError:
+    print("Please enter a valid number!")
